@@ -1,0 +1,31 @@
+language: generic
+sudo: required
+services: -docker
+
+before_install:
+  - docker build -t rossferreira/react-test -f ./client/Dockerfile.dev ./client
+  # ./client/Dockerfile.dev specify where the dockerfile is
+  #  ./client specify build context
+
+#  script section is the primary test running section- if any of the test exit the script with anything other than "0" then travis will assume build failure
+script:
+  - docker run -e CI=true rossferreira/react-test npm test
+  # we add npm test as this overwrites default command
+
+after_success:
+  # this configuration will build production version of all of the projects
+  #  then push them up to Docker Hub
+  - docker build -t rossferreira/multi-client ./client
+  - docker build -t rossferreira/multi-nginx ./nginx
+  - docker build -t rossferreira/multi-server ./server
+  - docker build -t rossferreira/multi-worker ./worker
+#  Log in to the docker CLI
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+#  Take those images and push them to docker hub
+- docker push rossferreira/multi-client
+- docker push rossferreira/multi-nginx
+- docker push rossferreira/multi-server
+- docker push rossferreira/multi-worker
+
+
+
