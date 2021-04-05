@@ -1,5 +1,7 @@
+language: generic
 sudo: required
-services: -docker
+services: 
+  - docker
 
 before_install:
   - docker build -t rossferreira/react-test -f ./client/Dockerfile.dev ./client
@@ -18,13 +20,13 @@ after_success:
   - docker build -t rossferreira/multi-nginx ./nginx
   - docker build -t rossferreira/multi-server ./server
   - docker build -t rossferreira/multi-worker ./worker
-#  Log in to the docker CLI
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
-#  Take those images and push them to docker hub
-- docker push rossferreira/multi-client
-- docker push rossferreira/multi-nginx
-- docker push rossferreira/multi-server
-- docker push rossferreira/multi-worker
+  #  Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+  #  Take those images and push them to docker hub
+  - docker push rossferreira/multi-client
+  - docker push rossferreira/multi-nginx
+  - docker push rossferreira/multi-server
+  - docker push rossferreira/multi-worker
 
 
 
