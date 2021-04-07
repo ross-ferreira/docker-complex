@@ -28,5 +28,16 @@ after_success:
   - docker push rossferreira/multi-server
   - docker push rossferreira/multi-worker
 
-
-
+deploy: 
+  provider: elasticbeanstalk
+  region: "eu-west-2"
+  app: "multi-docker"
+  env: "Multidocker-env"
+  bucket_name: "elasticbeanstalk-eu-west-2-252383048810"
+  bucket_path: "docker-multi"
+  # Only deply changes to Master Branch
+  on: 
+    branch: master
+  # Keys will come from local env
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
